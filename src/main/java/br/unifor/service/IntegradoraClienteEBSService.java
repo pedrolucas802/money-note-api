@@ -1,20 +1,20 @@
 package br.unifor.service;
 
 import br.unifor.model.dto.RetornoDto;
-import br.unifor.repository.IntegradorEBSRepository;
-import br.unifor.repository.mapper.IntegradorEBSMapper;
+import br.unifor.repository.IntegradorClienteEBSRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 
 @ApplicationScoped
-public class IntegradorEBSService {
+public class IntegradoraClienteEBSService {
 
     @Inject
-    IntegradorEBSRepository integradorEBSRepository;
+    IntegradorClienteEBSRepository integradorEBSRepository;
 
     public RetornoDto integraCliente(Long matricula, Long idPessoa){
         return this.integradorEBSRepository.integraClienteEBS(matricula, idPessoa);
     }
+
 
 }

@@ -13,7 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
 @ApplicationScoped
-public class IntegradorEBSRepository {
+public class IntegradorClienteEBSRepository {
 
 
     private final String SQL_CLIENTE_EBS = """ 
@@ -51,6 +51,7 @@ public class IntegradorEBSRepository {
             throw new EntityNotFoundException(e.getMessage());
         }
     }
+
 
     private String clobToString(Clob cl) throws SQLException {
         StringBuilder sb = new StringBuilder();
