@@ -1,0 +1,46 @@
+# ci-quarkus V2
+# branches: develop, master
+
+stages: [build, deploy]
+
+variables:
+  # configuraes iguais para todos ambientes
+  # BUILD_TYPE ( 0 = build | 1 = build manual )
+  BUILD_TYPE: 1
+
+cache:
+  paths:
+    - .m2/
+
+buildProject:
+  stage: build
+  tags: [ docker ]
+  script:
+    # adicionando script de versao
+    - apk add curl bash
+    - curl -O $GITLAB_URL_SCRIPTS/gitlab/versionBuild_v1.sh --insecure
+    - chmod +x versionBuild_v1.sh
+    # configurando variveis
+    - NEXUS=$NEXUS_URL_LOGIN/$INSTITUICAO/$CI_PROJECT_NAME:$CI_COMMIT_REF_NAME
+    # verificando se branch master ir adicionar o BUILD_VERSION na imagem
+    - test "$CI_COMMIT_REF_NAME" = "master" && NEXUS=${NEXUS}-$(/bin/bash versionBuild_v1.sh $CI_PROJECT_ID $GITLAB_ACCESS_TOKEN set)
+    # construindo e enviando para o nexus
+    - docker login -u $NEXUS_USER -p $NEXUS_PASSWORD $NEXUS_URL_LOGIN
+    - docker build -t $NEXUS .
+    - docker push $NEXUS
+
+deployProject:
+  stage: deploy
+  tags: [docker]
+  image:
+    name: bitnami/kubectl:latest
+    entrypoint: [""]
+  script:
+    - cat $KUBECONFIG > ~/.kube/config
+    - kubectl delete -f $DEPLOY_YML --ignore-not-found=true --insecure-skip-tls-verify
+    - kubectl apply -f $DEPLOY_YML --insecure-skip-tls-verify
+  rules:
+    - if: ($BUILD_TYPE == "0")
+      when: on_success
+    - if: ($BUILD_TYPE == "1")
+      when: manual
