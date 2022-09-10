@@ -7,10 +7,7 @@ import br.unifor.service.IntegradoraClienteEBSService;
 import br.unifor.service.IntegradoraTransacaoEBSService;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 
 @Path("integrador-ebs")
@@ -37,6 +34,15 @@ public class IntegradorEBSResource {
     public RetornoDto integraTransacao(TransacaoEBSDto transacao){
         return this.transacaoService.integraTransacao(transacao.idTitulo(), transacao.idPessoa(), transacao.nrMatricula());
     }
+
+    @Path("/ajuste-transacao")
+    @PUT
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public RetornoDto ajusteTransacao(TransacaoEBSDto ajuste){
+        return this.transacaoService.ajusteTransacaoEBS(ajuste.idTitulo(), ajuste.idPessoa(), ajuste.nrMatricula());
+    }
+
 
 
 }

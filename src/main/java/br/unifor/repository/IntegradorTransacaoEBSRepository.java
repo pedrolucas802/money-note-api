@@ -27,6 +27,17 @@ public class IntegradorTransacaoEBSRepository {
                        
                        
             """;
+    private final String SQL_AJUSTE_TRANSACAO_EBS = """ 
+                call ca.pk_gvs_ajuste_ebs_api.p_integra_ajuste_ebs   (
+                        p_id_titulo     => ?
+                        , p_id_pessoa   => ?
+                        , p_nr_matricula    => ?
+                        , p_fg_retorno    => ?
+                        , p_ds_retorno     => ?
+                        )
+                       
+                       
+            """;
 
     @Inject
     DataSource ds;
@@ -36,6 +47,30 @@ public class IntegradorTransacaoEBSRepository {
 
         try (Connection conn = ds.getConnection()) {
             try(CallableStatement call = conn.prepareCall(this.SQL_TRANSACAO_EBS)){
+
+                call.setLong(1, idTitulo);
+                call.setLong(2, idPessoa);
+                call.setString(3, nrMatricula);
+
+                call.registerOutParameter(4, Types.VARCHAR);
+                call.registerOutParameter(5, Types.VARCHAR);
+                call.execute();
+
+                var situacao = call.getString(4);
+                var mensagem = call.getString(5);
+                call.close();
+                return new RetornoDto(situacao, mensagem);
+            }
+
+        } catch (SQLException e) {
+            throw new EntityNotFoundException(e.getMessage());
+        }
+    }
+
+
+    public RetornoDto ajusteTransacaoEBS (Long idTitulo, Long idPessoa, String nrMatricula) {
+        try (Connection conn = ds.getConnection()) {
+            try (CallableStatement call = conn.prepareCall(this.SQL_AJUSTE_TRANSACAO_EBS)) {
 
                 call.setLong(1, idTitulo);
                 call.setLong(2, idPessoa);
