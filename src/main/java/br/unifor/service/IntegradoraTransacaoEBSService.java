@@ -18,4 +18,7 @@ public class IntegradoraTransacaoEBSService {
         return this.integradorTransacaoEBSRepository.integraTransacaoEBS(idTitulo, idPessoa, nrMatricula );
     }
 
+    public RetornoDto ajusteTransacaoEBS(Long idTitulo, Long idPessoa, String nrMatricula){
+        return this.integradorTransacaoEBSRepository.ajusteTransacaoEBS(idTitulo, idPessoa, nrMatricula );
+    }
 }
