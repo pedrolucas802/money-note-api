@@ -12,9 +12,12 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
 
+import static br.unifor.model.dto.RetornoDto.getRetornoDto;
+
 @ApplicationScoped
 public class IntegradorTransacaoEBSRepository {
-
+    @Inject
+    DataSource ds;
 
     private final String SQL_TRANSACAO_EBS = """ 
                 call ca.pk_gvs_titulo_ebs_api.p_integra_titulo_ebs   (
@@ -39,8 +42,7 @@ public class IntegradorTransacaoEBSRepository {
                        
             """;
 
-    @Inject
-    DataSource ds;
+
 
     public RetornoDto integraTransacaoEBS(Long idTitulo, Long idPessoa, String nrMatricula) {
 
@@ -48,18 +50,7 @@ public class IntegradorTransacaoEBSRepository {
         try (Connection conn = ds.getConnection()) {
             try(CallableStatement call = conn.prepareCall(this.SQL_TRANSACAO_EBS)){
 
-                call.setLong(1, idTitulo);
-                call.setLong(2, idPessoa);
-                call.setString(3, nrMatricula);
-
-                call.registerOutParameter(4, Types.VARCHAR);
-                call.registerOutParameter(5, Types.VARCHAR);
-                call.execute();
-
-                var situacao = call.getString(4);
-                var mensagem = call.getString(5);
-                call.close();
-                return new RetornoDto(situacao, mensagem);
+                return getRetornoDto(idTitulo, idPessoa, nrMatricula, call);
             }
 
         } catch (SQLException e) {
@@ -72,18 +63,7 @@ public class IntegradorTransacaoEBSRepository {
         try (Connection conn = ds.getConnection()) {
             try (CallableStatement call = conn.prepareCall(this.SQL_AJUSTE_TRANSACAO_EBS)) {
 
-                call.setLong(1, idTitulo);
-                call.setLong(2, idPessoa);
-                call.setString(3, nrMatricula);
-
-                call.registerOutParameter(4, Types.VARCHAR);
-                call.registerOutParameter(5, Types.VARCHAR);
-                call.execute();
-
-                var situacao = call.getString(4);
-                var mensagem = call.getString(5);
-                call.close();
-                return new RetornoDto(situacao, mensagem);
+                return getRetornoDto(idTitulo, idPessoa, nrMatricula, call);
             }
 
         } catch (SQLException e) {
