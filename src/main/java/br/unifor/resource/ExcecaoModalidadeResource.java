@@ -1,7 +1,7 @@
 package br.unifor.resource;
 
-import br.unifor.model.dto.ModalidadeAlunoExcecao;
-import br.unifor.model.dto.ModalidadeExcecao;
+import br.unifor.model.excecao.ModalidadeAlunoExcecao;
+import br.unifor.model.excecao.ModalidadeExcecao;
 import br.unifor.service.ModalidadeExcecaoService;
 
 import javax.ws.rs.GET;

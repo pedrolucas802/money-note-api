@@ -1,7 +1,7 @@
 package br.unifor.model.dto;
 
-import org.jetbrains.annotations.NotNull;
 
+import javax.validation.constraints.NotNull;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Types;

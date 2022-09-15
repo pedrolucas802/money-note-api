@@ -1,7 +1,7 @@
 package br.unifor.service;
 
-import br.unifor.model.dto.ModalidadeAlunoExcecao;
-import br.unifor.model.dto.ModalidadeExcecao;
+import br.unifor.model.excecao.ModalidadeAlunoExcecao;
+import br.unifor.model.excecao.ModalidadeExcecao;
 import br.unifor.repository.mapper.ModalidadeExcecaoMapper;
 
 import javax.enterprise.context.ApplicationScoped;

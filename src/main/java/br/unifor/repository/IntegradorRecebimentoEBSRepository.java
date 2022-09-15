@@ -1,7 +1,6 @@
 package br.unifor.repository;
 
 import br.unifor.model.dto.RetornoDto;
-import org.jetbrains.annotations.NotNull;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -10,7 +9,6 @@ import javax.sql.DataSource;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Types;
 
 import static br.unifor.model.dto.RetornoDto.getRetornoDto;
 

@@ -1,9 +1,11 @@
 package br.unifor.repository;
 
 import br.unifor.model.dto.RetornoDto;
+import br.unifor.model.dto.RetornoErroClienteDto;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import javax.persistence.EntityManager;
 import javax.persistence.EntityNotFoundException;
 import javax.sql.DataSource;
 import java.io.BufferedReader;
@@ -26,6 +28,9 @@ public class IntegradorClienteEBSRepository {
 
     @Inject
     DataSource ds;
+
+    @Inject
+    EntityManager entity;
 
 
     public RetornoDto integraClienteEBS(Long matricula, Long idPessoa) {
@@ -52,6 +57,36 @@ public class IntegradorClienteEBSRepository {
         }
     }
 
+    public RetornoErroClienteDto ErroIntegraCliente( Long nrMatricula, Long idPessoa ){
+
+        String SQL_ERRO_INTEGRS_CLIENTE_CRM =  """
+                SELECT DISTINCT to_char(cicle.dados_json) as "erro_json" FROM (
+                SELECT jt.nr_matricula, jt.id_pessoa, cad.nr_transacao
+                FROM cad_integra_cliente_log_ebs cad,
+                
+                JSON_TABLE(dados_json, '$[*]'
+                COLUMNS (
+                         nr_matricula VARCHAR2(10) PATH '$.p_nr_matricula',
+                         id_pessoa VARCHAR2(20) PATH '$.p_id_pessoa'))    
+                AS jt) cadjson INNER JOIN
+                    cad_integra_cliente_log_ebs cicle on cicle.nr_transacao = cadjson.nr_transacao
+                 where
+                     cicle.tipo = 'OUT'
+                and cicle.nr_transacao in 
+            (select 
+                nr_transacao 
+            from 
+                cad_integra_cliente_log_ebs 
+            where 
+                integrado = 'S' 
+                and id_pessoa = 366411 
+                and nr_matricula =2223004 )
+                 """;
+
+
+        return (RetornoErroClienteDto) entity.createNativeQuery(SQL_ERRO_INTEGRS_CLIENTE_CRM, "retornoErroClienteMapping").getSingleResult();
+
+    }
 
     private String clobToString(Clob cl) throws SQLException {
         StringBuilder sb = new StringBuilder();

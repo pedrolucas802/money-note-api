@@ -1,7 +1,7 @@
 package br.unifor.repository.mapper;
 
-import br.unifor.model.dto.ModalidadeExcecao;
-import br.unifor.model.dto.ModalidadeTipoExcecao;
+import br.unifor.model.excecao.ModalidadeExcecao;
+import br.unifor.model.excecao.ModalidadeTipoExcecao;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 

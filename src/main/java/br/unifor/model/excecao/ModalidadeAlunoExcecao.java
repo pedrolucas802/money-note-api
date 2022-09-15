@@ -1,4 +1,4 @@
-package br.unifor.model.dto;
+package br.unifor.model.excecao;
 
 import java.util.Collection;
 
