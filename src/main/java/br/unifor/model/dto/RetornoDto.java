@@ -6,7 +6,7 @@ import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
-public record RetornoDto(String situacao, String mensagem) {
+public record RetornoDto(String situacao, String mensagem, String erro) {
 
     @NotNull
     public static RetornoDto getRetornoDto(Long idTitulo, Long idPessoa, String nrMatricula, CallableStatement call) throws SQLException {
@@ -21,7 +21,9 @@ public record RetornoDto(String situacao, String mensagem) {
         var situacao = call.getString(4);
         var mensagem = call.getString(5);
         call.close();
-        return new RetornoDto(situacao, mensagem);
+        return new RetornoDto(situacao, mensagem, "N/A");
     }
+
+
 }
 

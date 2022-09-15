@@ -6,6 +6,7 @@ import br.unifor.repository.IntegradorClienteEBSRepository;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
+import java.util.Objects;
 
 @ApplicationScoped
 public class IntegradoraClienteEBSService {
@@ -14,7 +15,12 @@ public class IntegradoraClienteEBSService {
     IntegradorClienteEBSRepository integradorEBSRepository;
 
     public RetornoDto integraCliente(Long matricula, Long idPessoa){
-        return this.integradorEBSRepository.integraClienteEBS(matricula, idPessoa);
+        RetornoDto call = this.integradorEBSRepository.integraClienteEBS(matricula, idPessoa);
+        if(Objects.equals(call.situacao(), "N")){
+            return new RetornoDto(call.situacao(), call.mensagem(), String.valueOf(this.integradorEBSRepository.ErroIntegraCliente(matricula, idPessoa)));
+        }else{
+            return call;
+        }
     }
 
     public RetornoErroClienteDto RetornoErroCliente(Long matricula, Long idPessoa){

@@ -49,7 +49,7 @@ public class IntegradorClienteEBSRepository {
                 var mensagem = clobToString(cl);
                 call.close();
 
-                return new RetornoDto(situacao, mensagem);
+                return new RetornoDto(situacao, mensagem,"N/A");
             }
 
         } catch (SQLException e) {
