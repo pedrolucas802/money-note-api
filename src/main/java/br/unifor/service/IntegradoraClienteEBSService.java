@@ -19,7 +19,7 @@ public class IntegradoraClienteEBSService {
         if(Objects.equals(call.situacao(), "N")){
             return new RetornoDto(call.situacao(), call.mensagem(), String.valueOf(this.integradorEBSRepository.ErroIntegraCliente(matricula, idPessoa)));
         }else{
-            return this.integradorEBSRepository.integraClienteEBS(matricula, idPessoa);
+            return call;
         }
     }
 

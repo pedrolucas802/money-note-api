@@ -73,7 +73,7 @@ public class IntegradorClienteEBSRepository {
 
     public RetornoErroClienteDto ErroIntegraCliente( Long nrMatricula, Long idPessoa ){
 
-        String SQL_ERRO_INTEGRS_CLIENTE_CRM =  """
+        String SQL_ERRO_INTEGRA_CLIENTE_CRM =  """
                 SELECT DISTINCT to_char(cicle.dados_json) as "erro_json" FROM (
                 SELECT jt.nr_matricula, jt.id_pessoa, cad.nr_transacao
                 FROM cad_integra_cliente_log_ebs cad,
@@ -93,12 +93,13 @@ public class IntegradorClienteEBSRepository {
                 cad_integra_cliente_log_ebs 
             where 
                 integrado = 'S' 
-                and id_pessoa = 366411 
-                and nr_matricula =2223004 )
-                 """;
+                and id_pessoa =  """+ idPessoa +"""
+                and nr_matricula =  """+ nrMatricula +"""
+                 )""";
 
 
-        return (RetornoErroClienteDto) entity.createNativeQuery(SQL_ERRO_INTEGRS_CLIENTE_CRM, "retornoErroClienteMapping").getSingleResult();
+
+        return (RetornoErroClienteDto) entity.createNativeQuery(SQL_ERRO_INTEGRA_CLIENTE_CRM, "retornoErroClienteMapping").getSingleResult();
 
     }
 
