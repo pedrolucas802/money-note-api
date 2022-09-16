@@ -2,6 +2,8 @@ package br.unifor.repository;
 
 import br.unifor.model.dto.RetornoDto;
 import br.unifor.model.dto.RetornoErroClienteDto;
+import org.eclipse.microprofile.config.inject.ConfigProperties;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
+import java.util.List;
 
 @ApplicationScoped
 public class IntegradorClienteEBSRepository {
@@ -24,8 +27,11 @@ public class IntegradorClienteEBSRepository {
                                             p_id_pessoa =>  ?,
                                             p_fg_retorno => ?, 
                                             p_ds_retorno => ?) 
+    
+    
                                 """;
-
+    @ConfigProperty(name="oracle.session")
+    private String sessionOracle;
     @Inject
     DataSource ds;
 
@@ -36,6 +42,13 @@ public class IntegradorClienteEBSRepository {
     public RetornoDto integraClienteEBS(Long matricula, Long idPessoa) {
 
         try (Connection conn = ds.getConnection()) {
+            try(Statement statement = conn.createStatement()) {
+                for (String strsql : sessionOracle.split(";")) {
+                    statement.addBatch(strsql);
+                }
+                statement.executeBatch();
+            }
+
             try(CallableStatement call = conn.prepareCall(this.SQL_CLIENTE_EBS)){
 
                 call.setLong(1, matricula);
@@ -53,6 +66,7 @@ public class IntegradorClienteEBSRepository {
             }
 
         } catch (SQLException e) {
+            e.printStackTrace();
             throw new EntityNotFoundException(e.getMessage());
         }
     }
