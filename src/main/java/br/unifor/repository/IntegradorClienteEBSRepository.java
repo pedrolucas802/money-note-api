@@ -2,7 +2,6 @@ package br.unifor.repository;
 
 import br.unifor.model.dto.RetornoDto;
 import br.unifor.model.dto.RetornoErroClienteDto;
-import org.eclipse.microprofile.config.inject.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,26 +14,14 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.util.List;
+import java.lang.Long;
 
 @ApplicationScoped
 public class IntegradorClienteEBSRepository {
-
-
-    private final String SQL_CLIENTE_EBS = """ 
-                                    call ca.pk_cad_cliente_ebs_api.p_integra_cliente_ebs(
-                                            p_nr_matricula => ?, 
-                                            p_id_pessoa =>  ?,
-                                            p_fg_retorno => ?, 
-                                            p_ds_retorno => ?) 
-    
-    
-                                """;
     @ConfigProperty(name="oracle.session")
     private String sessionOracle;
     @Inject
     DataSource ds;
-
     @Inject
     EntityManager entity;
 
@@ -49,7 +36,16 @@ public class IntegradorClienteEBSRepository {
                 statement.executeBatch();
             }
 
-            try(CallableStatement call = conn.prepareCall(this.SQL_CLIENTE_EBS)){
+            String SQL_CLIENTE_EBS = """ 
+                        call ca.pk_cad_cliente_ebs_api.p_integra_cliente_ebs(
+                                p_nr_matricula => ?, 
+                                p_id_pessoa =>  ?,
+                                p_fg_retorno => ?, 
+                                p_ds_retorno => ?) 
+                        
+                        
+                    """;
+            try(CallableStatement call = conn.prepareCall(SQL_CLIENTE_EBS)){
 
                 call.setLong(1, matricula);
                 call.setLong(2, idPessoa);
@@ -71,7 +67,43 @@ public class IntegradorClienteEBSRepository {
         }
     }
 
-    public RetornoErroClienteDto ErroIntegraCliente( Long nrMatricula, Long idPessoa ){
+    public RetornoDto integraClienteTituloEBS(Long idTitulo) {
+
+        try (Connection conn = ds.getConnection()) {
+            try(Statement statement = conn.createStatement()) {
+                for (String strsql : sessionOracle.split(";")) {
+                    statement.addBatch(strsql);
+                }
+                statement.executeBatch();
+            }
+
+            String SQL_CLIENTE_TITULO_EBS = """ 
+                        call ca.pk_gvs_cliente_titulo_ebs_api.p_integra_cliente_titulo_ebs   (
+                                p_id_titulo   => ?, 
+                                p_fg_retorno => ?, 
+                                p_ds_retorno => ?)
+                    """;
+            try(CallableStatement call = conn.prepareCall(SQL_CLIENTE_TITULO_EBS)){
+
+                call.setLong(1, idTitulo);
+                call.registerOutParameter(2, Types.VARCHAR);
+                call.registerOutParameter(3, Types.VARCHAR);
+                call.execute();
+
+                var situacao = call.getString(2);
+                var mensagem = call.getString(3);
+                call.close();
+
+                return new RetornoDto(situacao, mensagem, "N/A");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new EntityNotFoundException(e.getMessage());
+        }
+    }
+    
+    public RetornoErroClienteDto ErroIntegraCliente(Long nrMatricula, Long idPessoa ){
 
         String SQL_ERRO_INTEGRA_CLIENTE_CRM =  """
                 SELECT DISTINCT to_char(cicle.dados_json) as "erro_json" FROM (

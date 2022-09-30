@@ -2,6 +2,7 @@ package br.unifor.model.dto;
 
 
 import javax.validation.constraints.NotNull;
+import java.beans.Transient;
 import java.sql.CallableStatement;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -9,6 +10,7 @@ import java.sql.Types;
 public record RetornoDto(String situacao, String mensagem, String erro) {
 
     @NotNull
+    @Transient
     public static RetornoDto getRetornoDto(Long idTitulo, Long idPessoa, String nrMatricula, CallableStatement call) throws SQLException {
         call.setLong(1, idTitulo);
         call.setLong(2, idPessoa);
