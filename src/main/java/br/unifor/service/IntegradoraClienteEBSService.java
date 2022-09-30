@@ -23,6 +23,10 @@ public class IntegradoraClienteEBSService {
         }
     }
 
+    public RetornoDto integraClienteTitulo(Long idTitulo){
+        return this.integradorEBSRepository.integraClienteTituloEBS(idTitulo);
+    }
+
     public RetornoErroClienteDto RetornoErroCliente(Long matricula, Long idPessoa){
         return this.integradorEBSRepository.ErroIntegraCliente(matricula, idPessoa);
     }

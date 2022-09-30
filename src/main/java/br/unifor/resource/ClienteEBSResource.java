@@ -31,6 +31,14 @@ public class ClienteEBSResource {
         return this.clienteService.RetornoErroCliente(cliente.matricula(), cliente.idPessoa());
     }
 
+    @Path("/cliente-titulo")
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
+    public RetornoDto integraClienteTitulo(Long idTitulo){
+        return this.clienteService.integraClienteTitulo(idTitulo);
+    }
+
 
 
 
