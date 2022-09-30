@@ -3,7 +3,7 @@ package br.unifor.service;
 import br.unifor.model.dto.RetornoDto;
 import br.unifor.model.dto.RetornoErroClienteDto;
 import br.unifor.repository.IntegradorClienteEBSRepository;
-
+import java.lang.Long;
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
 import java.util.Objects;

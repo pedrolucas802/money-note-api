@@ -13,4 +13,5 @@ public class IntegradoraRecebimentoEBSService {
     public RetornoDto integraRecebimento(Long idTitulo, Long idPessoa, String nrMatricula){
         return this.integradoraRecebimentoEBSService.integraRecebimento(idTitulo, idPessoa, nrMatricula );
     }
+
 }

@@ -2,7 +2,6 @@ package br.unifor.repository;
 
 import br.unifor.model.dto.RetornoDto;
 import br.unifor.model.dto.RetornoErroClienteDto;
-import org.eclipse.microprofile.config.inject.ConfigProperties;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
 import javax.enterprise.context.ApplicationScoped;
@@ -15,7 +14,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.sql.*;
-import java.util.List;
+import java.lang.Long;
 
 @ApplicationScoped
 public class IntegradorClienteEBSRepository {
@@ -79,10 +78,10 @@ public class IntegradorClienteEBSRepository {
             }
 
             String SQL_CLIENTE_TITULO_EBS = """ 
-                        call p_integra_cliente_titulo_ebs   (
+                        call ca.pk_gvs_cliente_titulo_ebs_api.p_integra_cliente_titulo_ebs   (
                                 p_id_titulo   => ?, 
                                 p_fg_retorno => ?, 
-                                p_ds_retorno => ?);
+                                p_ds_retorno => ?)
                     """;
             try(CallableStatement call = conn.prepareCall(SQL_CLIENTE_TITULO_EBS)){
 
@@ -104,7 +103,7 @@ public class IntegradorClienteEBSRepository {
         }
     }
     
-    public RetornoErroClienteDto ErroIntegraCliente( Long nrMatricula, Long idPessoa ){
+    public RetornoErroClienteDto ErroIntegraCliente(Long nrMatricula, Long idPessoa ){
 
         String SQL_ERRO_INTEGRA_CLIENTE_CRM =  """
                 SELECT DISTINCT to_char(cicle.dados_json) as "erro_json" FROM (
