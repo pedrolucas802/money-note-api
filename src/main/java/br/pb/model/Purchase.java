@@ -20,13 +20,13 @@ import java.util.Date;
 @Table(name = "purchase")
 public class Purchase {
     @Id
-    private Long idIncome;
+    private Long idPurchase;
     @Column
     private String description;
     @Column
     private BigDecimal value;
     @Column
-    private Date icomeDate;
+    private Date purchaseDate;
     @Column
-    private boolean incomeConst;
+    private boolean purchaseConst;
 }

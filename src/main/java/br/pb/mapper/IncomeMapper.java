@@ -25,11 +25,11 @@ public interface IncomeMapper {
     void save(@Param("income") Income income);
 
     @Update("Update income\n" +
-            "set name= #{income.name}, version= #{income.version}, bundle= #{income.bundle}\n" +
+            "set description= #{income.description}, value= #{income.value}, incomeConst= #{income.incomeConst}\n" +
             "where idIncome = #{income.idIncome}")
     void update(@Param("income") Income income);
 
-    @Delete("delete from income where id = #{id}")
+    @Delete("delete from income where idIncome = #{idIncome}")
     void delete(@Param("idIncome") Long idIncome);
 
     @Select("select * from income")
