@@ -29,7 +29,7 @@ public class IncomeService {
 
         return incomeMapper.findOne(idIncome)
                 .orElseThrow(() ->
-                        new APIException("Nenhum app encontrado", Response.Status.NO_CONTENT));
+                        new APIException("No income found.", Response.Status.NO_CONTENT));
 
     }
 
@@ -38,7 +38,7 @@ public class IncomeService {
             incomeMapper.save(income);
         } catch (Exception e) {
             e.printStackTrace();
-            throw new APIException("Error while adding the investment", e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
+            throw new APIException("Error while adding the income", e.getMessage(), Response.Status.INTERNAL_SERVER_ERROR);
         }
     }
 
